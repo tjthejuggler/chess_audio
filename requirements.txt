@@ -1,0 +1,5 @@
+genanki
+pydub
+chess
+torch
+TTS
