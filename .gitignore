@@ -1,1 +1,4 @@
 /.venv
+*deepgram_apikey.txt
+/ouput_audio
+/audio_bricks

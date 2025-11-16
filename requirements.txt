@@ -1,5 +1,4 @@
 genanki
 pydub
 chess
-torch
-TTS
+deepgram-sdk

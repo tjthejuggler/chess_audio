@@ -44,7 +44,8 @@ def combine_audio(file_list, output_filename):
     combined_audio = AudioSegment.empty()
     for file in file_list:
         try:
-            audio_segment = AudioSegment.from_wav(os.path.join("audio_bricks", file))
+            # Use from_file for format-agnostic loading (handles .mp3)
+            audio_segment = AudioSegment.from_file(os.path.join("audio_bricks", file))
             combined_audio += audio_segment
         except FileNotFoundError:
             print(f"  [ERROR] Audio file not found: {file}")
@@ -70,15 +71,14 @@ def create_anki_deck():
         
         # --- Create Question Audio ---
         question_audio_files = [
-            "phrase_what_color_is.wav",
-            f"file_{square_name[0]}.wav",
-            f"rank_{square_name[1]}.wav",
+            "phrase_what_color_is.mp3",
+            f"square_{square_name}.mp3",
         ]
         question_audio_output = os.path.join(output_audio_dir, f"what_color_is_{square_name}.mp3")
         combine_audio(question_audio_files, question_audio_output)
         
         # --- Create Answer Audio ---
-        answer_audio_file = f"color_{color}.wav"
+        answer_audio_file = f"color_{color}.mp3"
         
         # --- Create Anki Note ---
         question_text = f"What color is {square_name}?"
@@ -97,8 +97,8 @@ def create_anki_deck():
         
         # Add all required media files to the list
         media_files.append(question_audio_output)
-        media_files.append(os.path.join("audio_bricks", "color_light.wav"))
-        media_files.append(os.path.join("audio_bricks", "color_dark.wav"))
+        media_files.append(os.path.join("audio_bricks", "color_light.mp3"))
+        media_files.append(os.path.join("audio_bricks", "color_dark.mp3"))
         # Add the base audio bricks to the media files list
         for f in question_audio_files:
             media_files.append(os.path.join("audio_bricks", f))

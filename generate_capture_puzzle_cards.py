@@ -32,7 +32,8 @@ def combine_audio(file_list, output_filename):
     combined_audio = AudioSegment.empty()
     for file in file_list:
         try:
-            audio_segment = AudioSegment.from_wav(os.path.join("audio_bricks", file))
+            # Use from_file for format-agnostic loading (handles .mp3)
+            audio_segment = AudioSegment.from_file(os.path.join("audio_bricks", file))
             combined_audio += audio_segment
         except FileNotFoundError:
             print(f"  [ERROR] Audio file not found: {file}")
@@ -122,30 +123,30 @@ def create_anki_deck():
 
                 # White's pieces
                 question_text_parts.append("White:")
-                question_audio_files.extend(["color_white.wav", "silence_0.5s.wav"])
+                question_audio_files.extend(["color_white.mp3", "silence_0.5s.mp3"])
                 white_pieces = board.pieces(chess.KING, chess.WHITE) | board.pieces(attacker_pt if attacker_color == chess.WHITE else defender_pt, chess.WHITE)
                 for square in sorted(list(white_pieces)):
                     piece = board.piece_at(square)
                     square_name = chess.square_name(square)
                     piece_name = get_piece_name(piece.piece_type)
-                    question_text_parts.append(f"{piece_name.capitalize()} on {square_name}")
-                    question_audio_files.extend([f"piece_{piece_name}.wav", "action_on.wav", f"file_{square_name[0]}.wav", f"rank_{square_name[1]}.wav", "silence_0.2s.wav"])
+                    question_text_parts.append(f"{piece_name.capitalize()} {square_name}")
+                    question_audio_files.extend([f"piece_{piece_name}.mp3", f"square_{square_name}.mp3", "silence_0.2s.mp3"])
 
                 # Black's pieces
                 question_text_parts.append("Black:")
-                question_audio_files.extend(["color_black.wav", "silence_0.5s.wav"])
+                question_audio_files.extend(["color_black.mp3", "silence_0.5s.mp3"])
                 black_pieces = board.pieces(chess.KING, chess.BLACK) | board.pieces(attacker_pt if attacker_color == chess.BLACK else defender_pt, chess.BLACK)
                 for square in sorted(list(black_pieces)):
                     piece = board.piece_at(square)
                     square_name = chess.square_name(square)
                     piece_name = get_piece_name(piece.piece_type)
-                    question_text_parts.append(f"{piece_name.capitalize()} on {square_name}")
-                    question_audio_files.extend([f"piece_{piece_name}.wav", "action_on.wav", f"file_{square_name[0]}.wav", f"rank_{square_name[1]}.wav", "silence_0.2s.wav"])
+                    question_text_parts.append(f"{piece_name.capitalize()} {square_name}")
+                    question_audio_files.extend([f"piece_{piece_name}.mp3", f"square_{square_name}.mp3", "silence_0.2s.mp3"])
                 
                 # Whose turn
                 turn_text = "White to move" if attacker_color == chess.WHITE else "Black to move"
                 question_text_parts.append(turn_text)
-                question_audio_files.append(f"phrase_{turn_text.lower().replace(' ', '_')}.wav")
+                question_audio_files.append(f"phrase_{turn_text.lower().replace(' ', '_')}.mp3")
                 
                 question_text = " ".join(question_text_parts)
                 answer_text = board.san(capture_move)
@@ -168,7 +169,7 @@ def create_anki_deck():
                         question_text,
                         answer_text,
                         f"[sound:{os.path.basename(question_audio_output)}]",
-                        "[sound:silence_0.2s.wav]"  # Placeholder for answer audio
+                        "[sound:silence_0.2s.mp3]"  # Placeholder for answer audio
                     ],
                     tags=['simple_captures'])
                 deck.add_note(note)
