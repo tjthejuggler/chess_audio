@@ -2,6 +2,7 @@ import genanki
 import os
 import chess
 from pydub import AudioSegment
+import random
 
 # --- Anki Card Model Definition ---
 # This model is a simplified version of the one found in anki_helper.py
@@ -66,7 +67,11 @@ def create_anki_deck():
     output_audio_dir = "output_audio"
     os.makedirs(output_audio_dir, exist_ok=True)
 
-    for square_name in chess.SQUARE_NAMES:
+    # Shuffle the squares to randomize the card order in the deck
+    square_list = list(chess.SQUARE_NAMES)
+    random.shuffle(square_list)
+
+    for square_name in square_list:
         color = get_square_color(square_name)
         
         # --- Create Question Audio ---
